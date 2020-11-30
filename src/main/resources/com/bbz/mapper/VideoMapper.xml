@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bbz.dao.VideoDAO">
+    <!--分页-->
+    <select id="selectPage" resultType="Video">
+        select id,title,brief,cover_path coverPath,upload_time uploadTime,like_count likeCount,play_count playCount,category_id categoryId,user_id userId,group_id groupId,video_path videoPath,status
+        from yx_video
+        limit #{pageNow},#{size}
+    </select>
+    <!--总行数-->
+    <select id="count" resultType="Integer">
+        select count(id) from yx_video
+    </select>
+    <!--根据ID查一个-->
+    <select id="seletOne" resultType="Video">
+        select id,title,brief,cover_path coverPath,upload_time uploadTime,like_count likeCount,play_count playCount,category_id categoryId,user_id userId,group_id groupId,video_path videoPath,status
+        from yx_video
+        where id=#{id}
+    </select>
+    <!--修改-->
+    <update id="update" parameterType="Video">
+        update yx_video set video_path=#{videoPath},cover_path=#{coverPath}
+        where id=#{id}
+    </update>
+    <!--删除-->
+    <delete id="delet">
+        delete from yx_video
+        where id=#{id}
+    </delete>
+    <select id="queryByReleaseTime" resultType="com.bbz.po.VideoPO">
+        select
+        c.cate_name cateName,
+        v.id,v.title videoTitle,v.cover_path cover,v.video_path path,v.upload_time uploadTime,v.brief description,
+        u.pic_img userPhoto
+        from yx_category c
+        right join yx_video v
+        on c.id=v.category_id
+        left join yx_user u
+        on u.id=v.user_id
+        order by v.upload_time desc
+    </select>
+
+    <select id="queryByLikeVideoName" resultType="com.bbz.po.VideoPO" parameterType="String">
+        select
+        c.cate_name cateName,
+        v.id,v.title videoTitle,v.cover_path cover,v.video_path path,v.upload_time uploadTime,v.brief description,
+        u.pic_img userPhoto
+        from yx_category c
+        right join yx_video v
+        on c.id=v.category_id
+        left join yx_user u
+        on u.id=v.user_id
+        where title like concat('%',#{key},'%')
+        order by v.upload_time desc
+    </select>
+
+    <select id="queryCateVideoList" resultType="com.bbz.po.VideoPO" parameterType="String">
+        select
+        c.cate_name cateName,c.id categoryId,
+        v.id,v.title videoTitle,v.cover_path cover,v.video_path path,v.upload_time uploadTime,v.brief description,v.category_id categoryId,
+        u.pic_img userPhoto,u.nick_name userName,u.id
+        from yx_category c
+        right join yx_video v
+        on c.id=v.category_id
+        left join yx_user u
+        on u.id=v.user_id
+        where v.category_id=#{cateId}
+        order by v.upload_time desc
+    </select>
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bbz.dao.LogDAO">
+    <select id="selectPage" resultType="Log">
+        select id,username userName,operation_time operationTime,oper,status
+        from yx_log
+        limit #{pageNow},#{size}
+    </select>
+
+    <!--总行数-->
+    <select id="count" resultType="Integer">
+        select count(id) from yx_log
+    </select>
+</mapper>
